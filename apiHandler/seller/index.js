@@ -51,6 +51,11 @@ module.exports = {
     const order = await Order.findById(orderId).populate('customer');
     const { status } = req.body;
     order.status = status;
+    if (order.status === 'Delivered' && order.driver) {
+      const driver = await Driver.findById(order.driver);
+      driver.availabilityStatus = 'available';
+      await driver.save();
+    }
     sendEmail(order.customer.email, 'Your order with id ' + orderId + ' has been updated with following status ' + status);
     res.json(await order.save());
 

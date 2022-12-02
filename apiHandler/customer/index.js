@@ -46,11 +46,17 @@ module.exports = {
       seller: item.seller,
       status: "Order placed",
     });
+    item.status = 'sold';
+    await item.save();
     res.json(await order.save());
   },
   withdrawOrder: async (req, res) => {
     const orderId = req.params.id;
-    res.json(await Order.findByIdAndDelete(orderId));
+    const order = await Order.findById(orderId);
+    const item = await Item.findById(order.item);
+    item.status = 'available';
+    await item.save();
+    res.json(await order.delete());
   },
   orders: async (req, res) => {
     const customerId = req.session.user._id;

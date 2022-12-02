@@ -32,7 +32,7 @@ const apiVersion = "/apiV1";
 [
   ["post", "/message", handler.common.postMessage, null],
   ["get", "/message/:orderId", handler.common.getMessages, null],
-  ["get", "/location", handler.driver.getLocation, null],
+  ["get", "/location/:orderId", handler.driver.getLocation, null],
   ["get", "/currentUser", handler.common.currentUser, null],
   [
     "post",

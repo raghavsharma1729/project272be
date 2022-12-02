@@ -28,9 +28,10 @@ module.exports = {
       res.json(await driverLocation.save());
     }
   },
-
   getLocation: async (req, res) => {
-    const locations = await DriverLocation.find().limit(1);
+    console.log(req.params.orderId);
+    const locations = await DriverLocation.find({ orderId: req.params.orderId });
+    console.log(locations);
     res.json(locations[0]);
   },
   update: async (req, resp) => {
