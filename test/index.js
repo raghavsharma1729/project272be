@@ -9,11 +9,11 @@ chai.use(chaiHttp);
 const vars = { token: null, user: null, email: null };
 const agent = chai.request.agent(server);
 
-describe('An employee', () => {
+describe('An customer', () => {
   beforeEach((done) => {
     vars.email = `${Math.random().toString(36).substring(7)}@test.com`;
     agent
-      .post('/apiV1/signup/employee')
+      .post('/apiV1/signup/customer')
       .send({ name: 'test', email: vars.email, password: 'pwd' })
       .end((err, res) => {
         assert.equal(res.body.user.email, vars.email);
@@ -22,9 +22,9 @@ describe('An employee', () => {
       });
   });
 
-  it('should be able to login using PUT /apiV1/login/employee', (done) => {
+  it('should be able to login using PUT /apiV1/login/customer', (done) => {
     chai.request(server)
-      .put('/apiV1/login/employee')
+      .put('/apiV1/login/customer')
       .send({ email: vars.email, password: 'pwd' })
       .end((err, res) => {
         assert.equal(res.body.user.email, vars.email);
@@ -44,7 +44,7 @@ describe('An employee', () => {
 
   it('should be able to get list of companies', (done) => {
     chai.request(server)
-      .get('/apiV1/search/company')
+      .get('/apiV1/search/seller')
       .set('authorization', vars.token)
       .query({ text: 'Google' })
       .end((err, res) => {
@@ -53,9 +53,9 @@ describe('An employee', () => {
       });
   });
 
-  it('should be able to get  company profile', (done) => {
+  it('should be able to get  seller profile', (done) => {
     chai.request(server)
-      .get('/apiV1/company/profile/5fbc3c90c978a28455424bb2')
+      .get('/apiV1/seller/profile/5fbc3c90c978a28455424bb2')
       .set('authorization', vars.token)
       .end((err, res) => {
         res.body.should.be.a('object');
@@ -73,9 +73,9 @@ describe('An employee', () => {
       });
   });
 
-  it('should be able to withdraw job applcation', (done) => {
+  it('should be able to withdraw order', (done) => {
     chai.request(server)
-      .delete('/apiV1/jobApplication/5fbc8634e97b99e33f437055')
+      .delete('/apiV1/order/5fbc8634e97b99e33f437055')
       .set('authorization', vars.token)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
@@ -84,10 +84,10 @@ describe('An employee', () => {
   });
 });
 
-describe('A company', () => {
+describe('A seller', () => {
   beforeEach((done) => {
     chai.request(server)
-      .put('/apiV1/login/company')
+      .put('/apiV1/login/seller')
       .send({ email: 'google@gmail.com', password: 'pwd' })
       .end((err, res) => {
         assert.equal(res.body.user.email, 'google@gmail.com');
@@ -97,9 +97,9 @@ describe('A company', () => {
       });
   });
 
-  it('should be able to add company job posting with POST /apiV1/jobPosting', (done) => {
+  it('should be able to add seller item posting with POST /apiV1/item', (done) => {
     chai.request(server)
-      .post('/apiV1/jobPosting')
+      .post('/apiV1/item')
       .set('authorization', vars.token)
       .send({
         title: 'Product Manager',
@@ -118,9 +118,9 @@ describe('A company', () => {
       });
   });
 
-  it('should be able to update company profile with PUT /apiV1/company', (done) => {
+  it('should be able to update seller profile with PUT /apiV1/seller', (done) => {
     chai.request(server)
-      .put('/apiV1/company')
+      .put('/apiV1/seller')
       .set('authorization', vars.token)
       .send({ description: 'Rated no.1 of glassdoor' })
       .end((err, res) => {

@@ -4,29 +4,14 @@ module.exports = (mongoose) => {
       name: { type: String, required: true },
       email: { type: String, required: true, index: { unique: true } },
       password: { type: String, required: true },
-      jobSearchStatus: {
+      availabilityStatus: {
         type: String,
-        enum: ["not-looking", "casually-looking", "actively-looking", "busy"],
-        default: "not-looking",
+        enum: ["available", "busy"],
+        default: "available",
       },
-      jobTitleLookingFor: { type: String },
-      targetSalary: { type: String },
-      openToRelocation: { type: Boolean, default: false },
-      typeOfIndustry: { type: String },
-      race: { type: String },
       isMale: { type: Boolean, default: true },
-      disability: { type: String },
-      veteranStatus: { type: String },
       profilePic: { type: String },
-      resumes: [
-        {
-          fileId: { type: String, required: true },
-          fileName: { type: String, required: true },
-        },
-      ],
-      primaryResume: { type: String },
-      orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'JobApplication' }],
-
+      orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     },
     {
       timestamps: true,

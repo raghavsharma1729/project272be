@@ -18,27 +18,12 @@ const optFiles = () => Joi.array().items(Joi.string()).label("Files");
 // Doc - https://joi.dev/api/?v=17.3.0
 // TODO : complete verify schema for all create and update apis, allowUnknown should be set to false
 const schema = {
-  signupCompany: Joi.object({
-    name: reqStr("Buyer name"),
-    email: Joi.string().email().required().label("Buyer email"),
+  signupSeller: Joi.object({
+    name: reqStr("Seller name"),
+    email: Joi.string().email().required().label("Seller email"),
     password: reqStr("Password"),
   }),
-  signupRetailShop: Joi.object({
-    name: reqStr("shop name"),
-    email: Joi.string().email().required().label("shop email"),
-    password: reqStr("Password"),
-  }),
-  signupShopper: Joi.object({
-    name: reqStr("shopper name"),
-    email: Joi.string().email().required().label("shopper email"),
-    password: reqStr("Password"),
-    retailShop: reqStr("affiliate shop id"),
-  }),
-  createRetailItem: Joi.object({
-    title: reqStr("item name"),
-    price: reqNum("item price"),
-  }),
-  signupEmployee: Joi.object({
+  signupCustomer: Joi.object({
     name: reqStr("Name"),
     email: Joi.string().email().required().label("Email"),
     password: Joi.string().min(3).required(),
@@ -48,33 +33,23 @@ const schema = {
     email: Joi.string().email().required().label("Email"),
     password: Joi.string().min(3).required(),
   }),
-  updateCompany: Joi.object({
-    website: Joi.string().domain().label("Website"),
+  updateSeller: Joi.object({
+    description: Joi.string().label("description"),
   }),
-  updateRetailShop: Joi.object({}),
-  addJobPosting: Joi.object({
+  addItem: Joi.object({
     title: reqStr("Product name"),
-    industry: reqStr("Industry"),
-    country: reqStr("Country"),
-    streetAddress: reqStr("Street address"),
-    city: reqStr("City"),
-    state: reqStr("State"),
-    zip: reqStr("Zip"),
+    description: reqStr("Industry"),
+    price: reqNum("price"),
+    condition: reqStr("condition"),
+    brand: reqStr("brand"),
+    purchasedDate: reqStr("purchasedDate"),
   }),
-  applyJob: Joi.object({}),
-  loginEmployee: Joi.object({
+  putOrder: Joi.object({}),
+  loginCustomer: Joi.object({
     email: Joi.string().email().required().label("Email"),
     password: Joi.string().required(),
   }),
-  loginRetailShop: Joi.object({
-    email: Joi.string().email().required().label("Email"),
-    password: Joi.string().required(),
-  }),
-  loginShopper: Joi.object({
-    email: Joi.string().email().required().label("Email"),
-    password: Joi.string().required(),
-  }),
-  loginCompany: Joi.object({
+  loginSeller: Joi.object({
     email: Joi.string().email().required().label("Email"),
     password: Joi.string().required(),
   }),

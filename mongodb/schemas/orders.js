@@ -1,19 +1,19 @@
 module.exports = (mongoose) => {
-  const jobApplicationSchema = new mongoose.Schema(
+  const orderSchema = new mongoose.Schema(
     {
-      company: {
+      seller: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Company",
+        ref: "Seller",
         required: true,
       },
-      job: {
+      item: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "JobPosting",
+        ref: "Item",
         required: true,
       },
-      employee: {
+      customer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Employee",
+        ref: "Customer",
         required: true,
       },
       status: {
@@ -35,5 +35,5 @@ module.exports = (mongoose) => {
     }
   );
 
-  return mongoose.model("JobApplication", jobApplicationSchema);
+  return mongoose.model("Order", orderSchema);
 };

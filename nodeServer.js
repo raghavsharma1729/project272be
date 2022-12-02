@@ -16,8 +16,8 @@ callAndWait = async (fn, ...params) => modules[fn](...params);
 
 const err = (msg) => ({ err: msg });
 const app = express();
-app.use(express.json()); // for parsing application/json
-app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(
@@ -33,80 +33,23 @@ const apiVersion = "/apiV1";
   ["post", "/message", handler.common.postMessage, null],
   ["get", "/message/:orderId", handler.common.getMessages, null],
   ["get", "/location", handler.driver.getLocation, null],
-  [
-    "post",
-    "/test/seedDummyReviews/:num",
-    handler.employee.seedDummyReviews,
-    null,
-  ],
-  ["get", "/test/dummyReviews/:limit", handler.employee.getDummyReviews, null],
   ["get", "/currentUser", handler.common.currentUser, null],
   [
     "post",
-    "/signup/company",
-    handler.common.signupCompany,
+    "/signup/seller",
+    handler.common.signupSeller,
     null,
-    schema.signupCompany,
+    schema.signupSeller,
   ],
-  // retail_shop signup
-  [
-    "post",
-    "/signup/retailShop",
-    handler.common.signupRetailShop,
-    null,
-    schema.signupRetailShop,
-  ],
-  // list retail shops (direct query)
-  ["get", "/list/retailShop", handler.retailShop.list, null, null],
-  // shopper sign up
-  [
-    "post",
-    "/signup/shopper",
-    handler.common.signupShopper,
-    null,
-    schema.signupShopper,
-  ],
-  // list items (direct query)
-  ["get", "/list/items", handler.retailItem.list, null, null],
   // list customers (direct query)
-  ["get", "/list/customers", handler.employee.list, null, null],
-  [
-    "put",
-    "/order/:retailOrderId/assignShopper",
-    handler.retailShop.assignShopper,
-    "retailShop",
-    null,
-  ],
-  ["get", "/shopper/orders", handler.shopper.orders, null, null],
-  ["get", "/retailShop/orders", handler.retailShop.orders, "retailShop", null],
-  [
-    "get",
-    "/customer/retailOrders",
-    handler.retailOrder.customerOrders,
-    "employee",
-    null,
-  ],
+  ["get", "/list/customers", handler.customer.list, null, null],
   // create item for retail_shop dashboard
   [
     "post",
-    "/items",
-    handler.retailItem.create,
-    "retailShop",
-    schema.createRetailItem,
-  ],
-  [
-    "post",
-    "/order/:shopId/place",
-    handler.retailOrder.createOrder,
-    "employee",
+    "/signup/customer",
+    handler.common.signupCustomer,
     null,
-  ],
-  [
-    "post",
-    "/signup/employee",
-    handler.common.signupEmployee,
-    null,
-    schema.signupEmployee,
+    schema.signupCustomer,
   ],
   [
     "post",
@@ -117,33 +60,17 @@ const apiVersion = "/apiV1";
   ],
   [
     "put",
-    "/login/company",
-    handler.common.loginCompany,
+    "/login/seller",
+    handler.common.loginSeller,
     null,
-    schema.loginCompany,
+    schema.loginSeller,
   ],
   [
     "put",
-    "/login/employee",
-    handler.common.loginEmployee,
+    "/login/customer",
+    handler.common.loginCustomer,
     null,
-    schema.loginEmployee,
-  ],
-  // login retail shop
-  [
-    "put",
-    "/login/retailShop",
-    handler.common.loginRetailShop,
-    null,
-    schema.loginRetailShop,
-  ],
-  // login shopper
-  [
-    "put",
-    "/login/shopper",
-    handler.common.loginShopper,
-    null,
-    schema.loginShopper,
+    schema.loginCustomer,
   ],
   [
     "put",
@@ -152,149 +79,81 @@ const apiVersion = "/apiV1";
     null,
     schema.loginDriver,
   ],
-  [
-    "put",
-    "/login/driver",
-    handler.common.loginDriver,
-    null,
-    schema.loginDriver,
-  ],
-  ["put", "/login/admin", handler.common.loginAdmin, null, schema.loginAdmin],
-  ["put", "/company", handler.company.update, "company", schema.updateCompany],
+  // ["put", "/login/admin", handler.common.loginAdmin, null, schema.loginAdmin],
+  ["put", "/seller", handler.seller.update, "seller", schema.updateSeller],
   ["put", "/driver", handler.driver.update, "driver", schema.updateDriver],
-  [
-    "put",
-    "/retailShop",
-    handler.retailShop.update,
-    "retailShop",
-    schema.updateRetailShop,
-  ],
-
   ["post", "/file", handler.common.uploadFile, null],
   ["get", "/file/:id", handler.common.getFile, null],
   [
     "post",
-    "/jobPosting",
-    handler.company.addJobPosting,
-    "company",
-    schema.addJobPosting,
+    "/item",
+    handler.seller.addItem,
+    "seller",
+    schema.addItem,
   ],
-  ["get", "/jobPosting", handler.company.getJobPosting, "company"],
+  ["get", "/item", handler.seller.getItem, "seller"],
   [
     "get",
-    "/company/:id/jobPosting",
-    handler.company.getJobPostingByCompanyId,
+    "/seller/:id/item",
+    handler.seller.getItemBySellerId,
     "admin",
   ],
-  ["put", "/employee", handler.employee.update, "employee", schema.update],
-  ["get", "/search/company", handler.employee.searchCompany, "any"],
-  ["get", "/search/jobPosting", handler.employee.searchJobPosting, "employee"],
-  ["get", "/company/profile/:id", handler.employee.getCompany, "any"],
-  ["get", "/employee/profile/:id", handler.company.getEmployee, "any"],
+  ["put", "/customer", handler.customer.update, "customer", schema.update],
+  // ["get", "/search/seller", handler.customer.searchSeller, "any"],
+  ["get", "/search/item", handler.customer.searchItem, "customer"],
+  ["get", "/seller/profile/:id", handler.customer.getSeller, "any"],
+  ["get", "/customer/profile/:id", handler.seller.getCustomer, "any"],
   // api for customer to list products for a shop
-  ["get", "/shop/:id/items", handler.retailShop.listItems, "employee"],
-  ["get", "/retailShop/:id/items", handler.retailShop.listItems, "retailShop"],
-  ["get", "/shops", handler.retailShop.list, "employee"],
-  ["get", "/job/:id", handler.employee.getJob, "employee"],
+  ["get", "/item/:id", handler.customer.getItem, "customer"],
   [
     "put",
-    "/jobApplication/:id",
-    handler.employee.applyJob,
-    "employee",
-    schema.applyJob,
+    "/order/:id",
+    handler.customer.putOrder,
+    "customer",
+    schema.putOrder,
   ],
-  ["delete", "/jobApplication/:id", handler.employee.withdrawJob, "employee"],
-  ["post", "/resume/:id", handler.employee.addResume, "employee"],
-  ["put", "/resume/primary/:id", handler.employee.setPrimaryResume, "employee"],
+  ["delete", "/order/:id", handler.customer.withdrawOrder, "customer"],
   [
     "get",
-    "/company/jobApplications",
-    handler.company.jobApplications,
-    "company",
+    "/seller/orders",
+    handler.seller.orders,
+    "seller",
   ],
-  ["get", "/driver/jobApplications", handler.driver.getApplications, "driver"],
-  ["put", "/assignDriver/:id", handler.company.assignDriver, "driver"],
-  ["put", "/order/:id/assignDriver", handler.shopper.assignDriver, "driver"],
+  ["get", "/driver/orders", handler.driver.getOrders, "driver"],
+  ["put", "/assignDriver/:id", handler.seller.assignDriver, "driver"],
   ["put", "/orders/location/:id", handler.driver.locationUpdate, "driver"],
   [
     "get",
-    "/employee/jobApplications",
-    handler.employee.jobApplications,
-    "employee",
+    "/customer/orders",
+    handler.customer.orders,
+    "customer",
   ],
   [
     "put",
-    "/company/jobApplication/status/:id",
-    handler.company.setJobApplicationStatus,
+    "/seller/order/status/:id",
+    handler.seller.setOrderStatus,
     "any",
   ],
-  ["post", "/employee/salary/:id", handler.employee.addSalary, "employee"],
+  //not required
   [
     "get",
-    "/jobPosting/company/:id",
-    handler.employee.getCompanyJobPosting,
-    "employee",
+    "/item/seller/:id",
+    handler.customer.getSellerItems,
+    "customer",
   ],
-  ["post", "/review/:id", handler.employee.addReview, "employee"],
-  [
-    "put",
-    "/review/helpfulVote/:id",
-    handler.employee.addHelpfulVote,
-    "employee",
-  ],
-  ["get", "/review/:id", handler.employee.getReviews, "employee"],
-  ["post", "/companyPhoto/:id", handler.employee.addCompanyPhoto, "employee"],
-  ["get", "/companyPhoto/:id", handler.employee.getCompanyPhotos, "any"],
-  [
-    "post",
-    "/interviewExperience/:id",
-    handler.employee.addInterviewExperience,
-    "employee",
-  ],
+  //not required
+  // ["post", "/sellerPhoto/:id", handler.customer.addSellerPhoto, "customer"],
+  //not required
+  // ["get", "/sellerPhoto/:id", handler.customer.getSellerPhotos, "any"],
+  //not required
+  ["get", "/seller/report", handler.seller.getSellerReport, "seller"],
+  //not required
   [
     "get",
-    "/interviewExperience/:id",
-    handler.employee.getInterviewExperience,
-    "employee",
-  ],
-  ["get", "/admin/reviews/:status", handler.admin.getReviews, "admin"],
-  [
-    "get",
-    "/admin/reviews/:id/:status",
-    handler.admin.getReviewsByCompanyIdAndStatus,
+    "/seller/:id/report",
+    handler.seller.getSellerReportBySellerId,
     "admin",
-  ],
-  [
-    "get",
-    "/admin/companyPhotos/:status",
-    handler.admin.getPrivatePhotos,
-    "admin",
-  ],
-  ["put", "/admin/reviews/:id", handler.admin.approveReview, "admin"],
-  ["put", "/admin/companyPhotos/:id", handler.admin.approvePhoto, "admin"],
-  ["get", "/admin/analytics", handler.admin.getAnalyticsData, "admin"],
-  ["get", "/company/report", handler.company.getCompanyReport, "company"],
-  [
-    "get",
-    "/company/:id/report",
-    handler.company.getCompanyReportByCompanyId,
-    "admin",
-  ],
-  ["get", "/employee/activity", handler.employee.getActivity, "employee"],
-  ["get", "/company/reviews", handler.company.getCompanyReviews, "company"],
-  [
-    "put",
-    "/company/favoriteReviews/:reviewId",
-    handler.company.markFavorite,
-    "company",
-  ],
-  [
-    "put",
-    "/company/featuredReview/:reviewId",
-    handler.company.updateFeaturedReview,
-    "company",
-  ],
-  ["put", "/company/reply/:reviewId", handler.company.addReply, "company"],
+  ]
 ].forEach((r) => {
   app[r[0]](
     apiVersion + r[1],
@@ -312,8 +171,9 @@ const apiVersion = "/apiV1";
         req.session = jwt.decode(token);
       }
 
-      console.log(r[3]);
-      if (r[3] === "company" || r[3] === "employee" || r[3] === "admin") {
+      console.log(r[0], r[1]);
+      // console.log(r[3]);
+      if (r[3] === "seller" || r[3] === "customer" || r[3] === "admin") {
         const { scope } = req.session;
         if (scope !== r[3]) {
           resp.status(401).json(err("You are not authorized for this action."));
