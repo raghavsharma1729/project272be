@@ -20,7 +20,7 @@ module.exports = {
     const mail = 'raghav.sharma01@sjsu.edu';
     const mailData = {
       from: '96raghavsharma+marketplace@gmail.com',  // sender address
-      to: [mail],   // list of receivers
+      to: [to],   // list of receivers
       subject: 'Your order update',
       text,
     };
